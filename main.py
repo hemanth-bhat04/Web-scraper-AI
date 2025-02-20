@@ -1,3 +1,19 @@
+import sys
+import types
+
+# Check if 'cgi' is missing and inject a minimal stub
+if "cgi" not in sys.modules:
+    cgi_stub = types.ModuleType("cgi")
+    # Minimal implementations for functions that might be used
+    def parse_qs(qs, keep_blank_values=False, strict_parsing=False):
+        return {}
+    def parse_qsl(qs, keep_blank_values=False, strict_parsing=False):
+        return []
+    
+    # Assign the minimal functions to the stub module
+    cgi_stub.parse_qs = parse_qs
+    cgi_stub.parse_qsl = parse_qsl
+    sys.modules["cgi"] = cgi_stub
 import streamlit as st
 from scrape import (scrape_website,split_dom_content,clean_body_content,extract_body)
 from bs4 import BeautifulSoup
